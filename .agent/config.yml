@@ -1,0 +1,47 @@
+# チーム構成・ロール・ワークフロー定義
+
+# === ロール定義 ===
+roles:
+  pm:          { responsibilities: "全体統括・タスク管理・品質管理。自らタスク実行しない", assigned_to: "Claude Code (メインセッション)" }
+  architect:   { responsibilities: "要求分析・仕様書作成・技術設計", recommended: "Claude Code" }
+  developer:   { responsibilities: "TDD実装・ユニットテスト・修正", recommended: "BE/大規模/修正→Codex CLI、FE/軽微→Claude Code" }
+  reviewer:    { responsibilities: "設計/コードレビュー。担当者以外が実施", recommended: "Codex CLI" }
+  tester:      { responsibilities: "E2Eテスト計画・実行・結果報告", recommended: "計画→Codex CLI、実行→Claude Code (MCP必須)" }
+
+# === アサインマトリクス ===
+# タスク種別          → 推奨メンバー
+# 設計                → Claude Code
+# バックエンド実装     → Codex CLI
+# フロントエンド実装   → Claude Code
+# 大規模実装/リファクタ → Codex CLI
+# 軽微な修正          → Claude Code
+# 仕様/コードレビュー  → Codex CLI
+# E2Eテスト実行       → Claude Code (Playwright MCP)
+# テスト計画策定       → Codex CLI
+# 不具合修正          → Codex CLI
+
+# === フェーズ定義 ===
+phases:
+  phase_1: { name: "仕様策定",  actor: [architect, reviewer], exit: "requirements.md+design.md存在、レビューAPPROVED" }
+  phase_2: { name: "実装",      actor: [developer],           exit: "ユニットテスト全パス、完了レポート存在、アプリ動作" }
+  phase_3: { name: "E2Eテスト", actor: [tester],              exit: "全E2Eテスト合格" }
+  phase_4: { name: "修正",      actor: [developer],           exit: "全不具合修正→Phase 3再実行" }
+  phase_5: { name: "最終報告",  actor: [pm],                  exit: "FINAL_MVP_REPORT.md作成、仕様書最新化" }
+
+# === 自律テスト-修正ループ ===
+test_loop:
+  max_iterations: 5
+  on_max: "PMに差し戻し、根本原因分析、lessons-learnedに記録"
+
+# === タスクステータス ===
+task_statuses: [CREATED, IN_PROGRESS, SELF_REVIEW, IN_REVIEW, APPROVED, TESTING, DONE, REJECTED]
+# IN_REVIEW: 設計タスクのみ / REJECTED: 3回で別担当者に再アサイン
+
+# === メンバー別ツール ===
+tools:
+  claude_code:
+    available: ["ファイル操作", "Bash/Task", "Playwright MCP", "Context7 MCP", "o3-search MCP", "IDE MCP"]
+  codex_cli:
+    available: ["ファイル読み書き", "シェルコマンド実行"]
+    not_available: ["MCP全般 (Playwright, Context7等)"]
+    invocation: "codex exec --full-auto \"指示内容\""
