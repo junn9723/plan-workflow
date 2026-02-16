@@ -17,7 +17,7 @@
 - **チーム開発**: PM + 専門メンバー(Architect/Developer/Reviewer/Tester)
 - **完全自律実行**: 不明点は自律的に推論・判断し最後まで完遂
 - **品質保証**: E2Eテスト省略は重大違反。全機能はテスト合格で完成を証明
-- **Skill積極活用**: 軽微な作業を除き、Claude Code の Skill（`/build`, `/test`, `/design` 等）を積極使用。手動作業より Skill を優先する
+- **Skill積極活用**: 軽微な作業を除き Skill を必ず使用。手動作業より Skill 優先 → `.agent/skills.md`
 - **日本語**: 全ドキュメントは日本語(コード内コメント等は英語可)
 
 | 対象 | 役割 |
@@ -118,7 +118,7 @@ project-workflow3/
 │   ├── config.yml                    # ロール・ツール・ワークフロー定義
 │   ├── pm-guide.md / member-guide.md
 │   ├── tasks/ / reviews/
-│   ├── knowledge.md / templates/
+│   ├── skills.md / knowledge.md / templates/
 ├── app/                              # アプリケーションコード
 ├── tests/  (unit/ + e2e/)
 └── scripts/

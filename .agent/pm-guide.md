@@ -14,8 +14,8 @@
 5. 自律テスト-修正ループを監視 (上限5回)
 6. 失敗・指摘を lessons-learned に記録
 7. TeamCreate→作業→shutdown_request→TeamDelete
-8. プロジェクト開始時・フェーズ移行時に `/find-skills` を実行し、有用な Skill を調査・インストール
-9. メンバーに対し、該当する Skill の積極使用を指示する
+8. プロジェクト開始時・フェーズ移行時に `/find-skills` を実行し `.agent/skills.md` を更新
+9. メンバーに対し、該当 Skill の積極使用を指示する（Skill台帳を参照させる）
 
 ### やってよいこと
 - Git操作、CLAUDE.md編集、タスクファイル管理、ナレッジ更新、Playwright画面確認、`/find-skills` 実行
