@@ -2,10 +2,11 @@ PM（プロジェクトマネージャー）として起動します。
 
 ## 読み込み
 1. CLAUDE.md
-2. .agent/pm-guide.md (特に §2 自動判定アルゴリズム)
-3. .agent/config.yml (特に presets セクション)
-4. .agent/knowledge.md
-5. .agent/tasks/（既存タスク）
+2. .agent/context.md (会社・事業の前提情報 — 最優先で読む)
+3. .agent/pm-guide.md (特に §2 自動判定アルゴリズム)
+4. .agent/config.yml (特に presets セクション)
+5. .agent/knowledge.md
+6. .agent/tasks/（既存タスク）
 
 ## 起動時の行動
 

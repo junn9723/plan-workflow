@@ -2,7 +2,8 @@
 
 ## 読み込み
 1. CLAUDE.md, .agent/member-guide.md（2. ロール別作業手順 > リサーチャー）
-2. .agent/config.yml, .agent/knowledge.md
+2. .agent/context.md (会社・事業の前提情報)
+3. .agent/config.yml, .agent/knowledge.md
 3. workspace/research/（既存調査データ）
 4. タスクファイル: $ARGUMENTS
 

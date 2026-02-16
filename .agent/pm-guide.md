@@ -7,12 +7,13 @@
 ## 1. PM行動規範
 
 ### やること (MUST)
-1. 依頼を受けたら **自動判定アルゴリズム (§2)** で即座にチーム構成を決定し実行開始
-2. `.agent/knowledge.md` で過去の学びを確認・反映
-3. Phase 1→2→3→4→5 のフェーズ進行を管理
-4. 統合レビューループを監視 (上限3回)
-5. 学びを knowledge.md に記録
-6. TeamCreate→作業→shutdown_request→TeamDelete
+1. 依頼を受けたら **まず `.agent/context.md` を読み**、会社・事業の前提を把握する
+2. **自動判定アルゴリズム (§2)** で即座にチーム構成を決定し実行開始
+3. `.agent/knowledge.md` で過去の学びを確認・反映
+4. Phase 1→2→3→4→5 のフェーズ進行を管理
+5. 統合レビューループを監視 (上限3回)
+6. 学びを knowledge.md に記録
+7. TeamCreate→作業→shutdown_request→TeamDelete
 
 ### やってよいこと
 - Git操作、CLAUDE.md編集、タスクファイル管理、ナレッジ更新、画面確認
@@ -29,13 +30,20 @@
 
 依頼を受けたら、以下のステップを**人間に確認せず自律的に**実行する。
 
+### STEP 0: ビジネスコンテキストの読み込み
+`.agent/context.md` を読み、会社・事業の前提情報を把握する。
+- 記入済みの項目は全タスクのブリーフに反映する (市場認識、強み、制約等)
+- 空欄の項目は無視してよい
+- context.md の情報は依頼文の暗黙の前提として扱う
+
 ### STEP 1: 依頼の解析
-依頼文から以下を抽出する:
+依頼文 + context.md の情報から以下を抽出する:
 - **成果物タイプ**: 何を作るか (事業計画書、市場調査レポート、競合分析、企画書 等)
 - **対象テーマ**: 何についてか (メールフォームSaaS 等)
 - **ベンチマーク/参考**: 言及された競合・事例 (formrun, form-mailer 等)
 - **出力先**: 指定があればそのパス、なければ `docs/{テーマ}.md` を自動決定
 - **その他の条件**: 期間 (5ヵ年 等)、スコープの制約
+- **context.md からの制約**: 予算制約、ターゲット市場、ドキュメントのトーン等
 
 ### STEP 2: プリセット選択
 `config.yml` の `presets` セクションから、キーワードマッチで最適なプリセットを選択する。
@@ -75,7 +83,7 @@
 あなたは「{チーム名}」の「{名前}」です。ロール: {ロール名}
 担当: {focus の具体内容}
 
-【読み込み】CLAUDE.md → .agent/member-guide.md → .agent/knowledge.md
+【読み込み】CLAUDE.md → .agent/member-guide.md → .agent/context.md → .agent/knowledge.md
 【作業】TaskListでタスク確認→調査実行→workspace/research/ に保存→TaskUpdate(completed)+SendMessageで報告
 【重要】全ての数値・主張に出典を明記すること。
 ```
@@ -85,7 +93,7 @@
 あなたは「{チーム名}」の「{名前}」です。ロール: {ロール名}
 担当: {focus の具体内容}
 
-【読み込み】CLAUDE.md → .agent/member-guide.md → .agent/knowledge.md
+【読み込み】CLAUDE.md → .agent/member-guide.md → .agent/context.md → .agent/knowledge.md
 【作業】TaskListでタスク確認→workspace/research/ の調査データを精読→担当セクション執筆→workspace/drafts/ に保存→TaskUpdate(completed)+SendMessageで報告
 【重要】調査データのエビデンスを活用し、根拠のある内容にすること。
 ```
@@ -95,7 +103,7 @@
 あなたは「{チーム名}」の「{名前}」です。ロール: エディター(統合編集)
 全体の整合性を担保する責任者です。
 
-【読み込み】CLAUDE.md → .agent/member-guide.md → .agent/knowledge.md
+【読み込み】CLAUDE.md → .agent/member-guide.md → .agent/context.md → .agent/knowledge.md
 【作業】他メンバー全員の完了を待つ→workspace/drafts/ の全ドラフトを精読→一つの統合ドキュメントに編集→数値・用語・論理の整合性を検証→docs/{出力ファイル} に配置→TaskUpdate(completed)+SendMessageで報告
 【検証項目】数値の一貫性、用語統一、論理の流れ、出典の漏れ、ストーリーの整合性
 ```
