@@ -8,9 +8,8 @@
 ## 利用ルール
 
 - 軽微な作業（1行修正、設定値変更等）を除き、該当 Skill がある場合は **必ず使用する**
-- PMはプロジェクト開始時・フェーズ移行時に `/find-skills` を実行し、本台帳を更新する
+- PMはプロジェクト開始時に `/find-skills` を実行し、本台帳を更新する
 - 新たに有用な Skill を発見したら即座に追記し、チームに共有する
-- Codex CLI は Skill 非対応。Claude Code メンバーのみが使用可能
 
 ---
 
@@ -19,15 +18,13 @@
 | Skill | 用途 | 使用フェーズ | 対象ロール |
 |-------|------|------------|-----------|
 | `/find-skills` | Skill検索・インストール提案 | 全フェーズ | PM |
-| `/design` | システム設計 | Phase 1 | Architect |
-| `/build` | プロジェクトビルド | Phase 2 | Developer |
-| `/test` | テスト実行 | Phase 2-4 | Developer, Tester |
-| `/analyze` | コード分析 | Phase 2-4 | Developer, Reviewer |
-| `/scan` | セキュリティスキャン | Phase 3 | Reviewer, Tester |
-| `/troubleshoot` | デバッグ・問題解決 | Phase 4 | Developer |
-| `/improve` | コード改善 | Phase 2, 4 | Developer |
-| `/git` | Git操作 | 全フェーズ | PM, Developer |
-| `/explain` | 技術ドキュメント | Phase 1-2 | Architect, Developer |
+| `/analyze` | 多角的分析 | Phase 2-4 | アナリスト, エディター |
+| `/explain` | 調査結果の解説・構造化 | Phase 2-3 | リサーチャー, ライター |
+| `/improve` | ドキュメント改善 | Phase 3-4 | ライター, エディター |
+| `/document` | ドキュメント作成 | Phase 3 | ライター |
+| `/git` | Git操作 | 全フェーズ | PM |
+| `/load` | プロジェクトコンテキスト読込 | Phase 1 | PM |
+| `/gemini-search` | Web検索(Gemini) | Phase 2 | リサーチャー |
 
 ---
 
@@ -37,7 +34,7 @@
 
 | Skill | 用途 | インストール日 | 備考 |
 |-------|------|--------------|------|
-| (例: `/shadcn`) | (UIコンポーネント) | (YYYY-MM-DD) | (PMが追記) |
+| (例: `/app-store-optimization`) | (ASO分析) | (YYYY-MM-DD) | (PMが追記) |
 
 ---
 

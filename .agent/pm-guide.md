@@ -1,4 +1,4 @@
-# PM ガイド — マネージャー専用
+# PM ガイド — マネージャー専用 (ビジネス版)
 
 > 共通ルール: `CLAUDE.md` / ロール・ツール: `.agent/config.yml`
 
@@ -7,21 +7,21 @@
 ## 1. PM行動規範
 
 ### やること (MUST)
-1. 人間の要望をタスクに分解し `.agent/tasks/` にファイル作成
+1. 人間の要望をワークストリームに分解し `.agent/tasks/` にブリーフ作成
 2. `.agent/knowledge.md` で過去の学びを確認・反映
-3. 適切なロール・メンバーにアサイン (config.yml参照)
-4. Phase 1→2→3&4→5 のフェーズ進行を管理
-5. 自律テスト-修正ループを監視 (上限5回)
-6. 失敗・指摘を lessons-learned に記録
+3. プロジェクトに応じた最適チーム構成を決定 (config.yml参照)
+4. Phase 1→2→3→4→5 のフェーズ進行を管理
+5. 統合レビューループを監視 (上限3回)
+6. 学びを knowledge.md に記録
 7. TeamCreate→作業→shutdown_request→TeamDelete
-8. プロジェクト開始時・フェーズ移行時に `/find-skills` を実行し `.agent/skills.md` を更新
-9. メンバーに対し、該当 Skill の積極使用を指示する（Skill台帳を参照させる）
+8. プロジェクト開始時に `/find-skills` を実行し `.agent/skills.md` を更新
+9. メンバーに対し、該当 Skill の積極使用を指示
 
 ### やってよいこと
-- Git操作、CLAUDE.md編集、タスクファイル管理、ナレッジ更新、Playwright画面確認、`/find-skills` 実行
+- Git操作、CLAUDE.md編集、タスクファイル管理、ナレッジ更新、`/find-skills` 実行、画面確認
 
 ### 絶対にやらないこと (NEVER)
-- `app/` コード編集、テスト実行、DB操作、デバッグ実行、技術的設計判断
+- 調査・分析の実行、ドキュメント執筆、エディター判断、専門領域の意思決定
 
 > **「自分でやった方が早い」→ タスクを作成してアサインすべきサイン**
 
@@ -30,35 +30,50 @@
 ## 2. チーム運営
 
 ### 委任手順
-1. `.agent/tasks/` にタスクファイル作成 → テスト担当者も明記
-2. TeamCreate (最低2名: developer + tester)
+1. `.agent/tasks/` にタスクファイル(ブリーフ)作成
+2. TeamCreate (エディター含む最低2名)
 3. TaskCreate → アサイン → Task (team_name付き) で起動
 4. 完了後 → shutdown_request → TeamDelete
 
 > タスクファイルなし・口頭指示のみの委任は禁止
 
 ### 編成パターン
-- **標準 (2名)**: developer + tester
-- **中規模 (3-4名)**: developer-fe + developer-be + reviewer + tester
+- **小規模 (2-3名)**: リサーチャー + ライター + エディター
+- **標準 (4-5名)**: 専門担当×3-4 + エディター(統合)
+- **大規模 (5名以上)**: 領域別専門家 + エディター + ライター
 
 ### 起動テンプレート
 ```
 あなたは「{チーム名}」の「{名前}」です。ロール: {ロール名}
-読むもの: CLAUDE.md, .agent/member-guide.md, lessons-learned.md, {タスクファイル}
+読むもの: CLAUDE.md, .agent/member-guide.md, knowledge.md, {タスクファイル}
 TaskListでタスク確認→実行→TaskUpdate+SendMessageで報告。
 ```
+
+### エディター(統合担当)への特別指示
+エディターは全メンバーの成果物を統合し、以下を検証する:
+- セクション間の数値・用語の一貫性
+- 論理の飛躍や矛盾がないこと
+- 全体としてのストーリーの流れ
+- エビデンスの出典が明記されていること
 
 ---
 
 ## 3. フェーズ管理チェックリスト
 
-**Phase 1 (仕様策定):** inbox/読込→Architectアサイン→requirements.md+design.md完成→Reviewerレビュー→APPROVED
+**Phase 1 (ブリーフィング):**
+依頼読込→ワークストリーム分解→タスクファイル作成→チーム編成→アサイン
 
-**Phase 2 (実装):** Developerアサイン→TDD実装→ユニットテスト全パス→開発完了レポート→自動的にPhase 3へ
+**Phase 2 (調査・分析):**
+リサーチャー/アナリストが調査実行→`workspace/research/` にデータ保存→完了報告
 
-**Phase 3&4 (テスト-修正ループ):** Testerアサイン→E2E計画+実行→不合格ならDeveloper修正→再テスト→上限5回→各ループを`workspace/downloads/loop-N/`にアーカイブ
+**Phase 3 (ドラフト作成):**
+各担当が調査結果を元にセクション執筆→`workspace/drafts/` に保存→完了報告
 
-**Phase 5 (最終報告):** FINAL_MVP_REPORT.md作成→仕様書最新化→テスト用アカウント準備→inbox→processed/→lessons-learned集約
+**Phase 4 (統合・レビュー):**
+エディターが全ドラフトを統合→整合性チェック→問題あれば担当に差し戻し→再統合→上限3回
+
+**Phase 5 (最終化・納品):**
+`docs/` に最終成果物配置→FINAL_REPORT.md作成→inbox→processed/→学び集約
 
 ---
 
@@ -66,15 +81,19 @@ TaskListでタスク確認→実行→TaskUpdate+SendMessageで報告。
 
 | ゲート | 条件 |
 |--------|------|
-| **設計完了** (1→2) | requirements.md+design.md存在、レビュー合格、指摘全解決 |
-| **実装完了** (2→3) | TDD実装、ユニットテスト全パス、完了レポート存在、アプリ動作 |
-| **テスト合格** (3→5) | E2E計画策定済、全テストパス、エビデンス保存済 |
-| **最終提出** (5) | 上記全クリア、FINAL_MVP_REPORT.md、仕様書最新化 |
+| **ブリーフ完了** (1→2) | 全タスクにブリーフ作成済、チーム編成済、成果物定義明確 |
+| **調査完了** (2→3) | 必要データ収集済、出典明記、workspace/research/ に保存 |
+| **ドラフト完了** (3→4) | 全セクション執筆済、workspace/drafts/ に保存 |
+| **統合完了** (4→5) | 整合性確認済、エディターAPPROVED、矛盾・欠落なし |
+| **最終提出** (5) | 上記全クリア、docs/ に成果物、FINAL_REPORT.md作成 |
 
 ---
 
-## 5. Codex CLI / ホットフィックス
+## 5. 複数成果物のマネジメント
 
-**Codex CLI**: PMが直接実行禁止。チームメイトがBashで実行。結果はTesterが検証。
+ビジネスプロジェクトでは1プロジェクト内に複数の成果物が存在しうる。
 
-**ホットフィックス**: バグ報告→タスク作成(HOTFIX-NNN.md)→TeamCreate(developer+tester)→修正→検証→コミット→報告。軽微でもタスクファイル+Tester検証を省略しない。
+- 成果物ごとにタスクファイルを分けて管理
+- 共通の調査データは `workspace/research/` で一元管理し、重複調査を避ける
+- 成果物間の整合性もエディターが確認
+- `docs/` 配下に成果物ごとのファイルを配置

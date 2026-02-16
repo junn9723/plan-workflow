@@ -1,27 +1,29 @@
-node_modules/
-vendor/
-.venv/
-__pycache__/
-*.pyc
-dist/
-build/
-*.egg-info/
-.idea/
-.vscode/
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
 *.swp
 *.swo
 *~
-.DS_Store
-Thumbs.db
+.idea/
+.vscode/
+
+# Environment
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
+
+# Temp
+*.tmp
+*.temp
 *.log
-npm-debug.log*
-coverage/
-.nyc_output/
-test-results/
-playwright-report/
 tmp/
 temp/
-*.tmp
+
+# Downloads (large binary files - keep .md files)
+workspace/downloads/*.png
+workspace/downloads/*.jpg
+workspace/downloads/*.jpeg
+workspace/downloads/*.gif
+workspace/downloads/*.pdf
