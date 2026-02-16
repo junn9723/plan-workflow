@@ -9,16 +9,79 @@ roles:
   writer:      { responsibilities: "ドキュメント構成・執筆・エグゼクティブサマリー", recommended: "Claude Code" }
   editor:      { responsibilities: "統合編集・整合性検証・品質レビュー", recommended: "Claude Code" }
 
-# === チーム編成例 ===
-# プロジェクト種別          → 推奨構成
-# 事業計画書               → リサーチャー + アナリスト + ストラテジスト + ライター + エディター
-# 市場調査レポート          → リサーチャー×2 + アナリスト + エディター
-# 競合分析                 → リサーチャー + ストラテジスト + エディター
-# 企画書・提案書            → リサーチャー + ストラテジスト + ライター + エディター
-# 財務分析                 → アナリスト×2 + エディター
-#
-# PMはプロジェクトに応じて柔軟に構成。1名が複数アーキタイプ兼務も可。
-# エディター(統合・品質担当)は原則必須。
+# === 成果物プリセット ===
+# PMは依頼内容からキーワードで成果物タイプを自動判定し、
+# 対応するプリセットでチーム構成・ワークストリームを自動決定する。
+# 完全一致しない場合は最も近いプリセットをベースにカスタマイズする。
+
+presets:
+  business_plan:
+    keywords: ["事業計画", "ビジネスプラン", "事業計画書", "5ヵ年計画", "3ヵ年計画"]
+    team:
+      - { name: "market-researcher",  role: "リサーチャー",     focus: "市場調査・競合分析" }
+      - { name: "product-strategist", role: "ストラテジスト",   focus: "プロダクト戦略・差別化" }
+      - { name: "financial-analyst",  role: "アナリスト",       focus: "財務モデル・収支計画" }
+      - { name: "gtm-strategist",     role: "ストラテジスト",   focus: "GTM・営業・マーケティング戦略" }
+      - { name: "integration-editor", role: "エディター",       focus: "統合編集・整合性担保" }
+    workstreams:
+      - { section: "エグゼクティブサマリー",           assignee: "integration-editor", phase: 4 }
+      - { section: "市場分析 (TAM/SAM/SOM, 競合)",     assignee: "market-researcher",  phase: 2 }
+      - { section: "プロダクト戦略 (機能, ロードマップ)", assignee: "product-strategist", phase: 3 }
+      - { section: "ビジネスモデル・収益構造",           assignee: "financial-analyst",  phase: 3 }
+      - { section: "財務計画 (P/L, KPI, シナリオ)",     assignee: "financial-analyst",  phase: 3 }
+      - { section: "GTM・営業・マーケティング戦略",      assignee: "gtm-strategist",     phase: 3 }
+      - { section: "組織・実行計画",                     assignee: "gtm-strategist",     phase: 3 }
+
+  market_research:
+    keywords: ["市場調査", "マーケットリサーチ", "市場分析", "業界分析"]
+    team:
+      - { name: "primary-researcher",   role: "リサーチャー", focus: "一次情報・市場データ収集" }
+      - { name: "secondary-researcher", role: "リサーチャー", focus: "競合分析・事例収集" }
+      - { name: "data-analyst",         role: "アナリスト",   focus: "データ分析・市場規模算定" }
+      - { name: "integration-editor",   role: "エディター",   focus: "統合編集・整合性担保" }
+    workstreams:
+      - { section: "市場概況・トレンド",   assignee: "primary-researcher",   phase: 2 }
+      - { section: "競合分析",             assignee: "secondary-researcher", phase: 2 }
+      - { section: "市場規模・成長予測",   assignee: "data-analyst",         phase: 3 }
+      - { section: "示唆・提言",           assignee: "integration-editor",   phase: 4 }
+
+  competitive_analysis:
+    keywords: ["競合分析", "競合調査", "ベンチマーク", "競合比較"]
+    team:
+      - { name: "comp-researcher",     role: "リサーチャー",   focus: "競合情報収集" }
+      - { name: "strategy-analyst",    role: "ストラテジスト", focus: "ポジショニング・差別化分析" }
+      - { name: "integration-editor",  role: "エディター",     focus: "統合編集・整合性担保" }
+    workstreams:
+      - { section: "競合各社プロファイル",   assignee: "comp-researcher",    phase: 2 }
+      - { section: "機能・価格比較",         assignee: "comp-researcher",    phase: 2 }
+      - { section: "ポジショニング・SWOT",   assignee: "strategy-analyst",   phase: 3 }
+      - { section: "差別化戦略・提言",       assignee: "integration-editor", phase: 4 }
+
+  proposal:
+    keywords: ["企画書", "提案書", "プロポーザル", "企画"]
+    team:
+      - { name: "background-researcher", role: "リサーチャー",   focus: "背景調査・根拠データ収集" }
+      - { name: "strategy-planner",      role: "ストラテジスト", focus: "企画コンセプト・戦略設計" }
+      - { name: "proposal-writer",       role: "ライター",       focus: "企画書執筆・構成" }
+      - { name: "integration-editor",    role: "エディター",     focus: "統合編集・整合性担保" }
+    workstreams:
+      - { section: "背景・課題分析",         assignee: "background-researcher", phase: 2 }
+      - { section: "企画コンセプト・戦略",   assignee: "strategy-planner",      phase: 3 }
+      - { section: "実行計画・スケジュール", assignee: "strategy-planner",      phase: 3 }
+      - { section: "全体構成・執筆",         assignee: "proposal-writer",       phase: 3 }
+
+  financial_analysis:
+    keywords: ["財務分析", "収支計画", "財務モデル", "投資計画", "予算策定"]
+    team:
+      - { name: "data-researcher",     role: "リサーチャー", focus: "財務データ・ベンチマーク収集" }
+      - { name: "financial-modeler",   role: "アナリスト",   focus: "財務モデル構築・シナリオ分析" }
+      - { name: "kpi-analyst",         role: "アナリスト",   focus: "KPI設計・感度分析" }
+      - { name: "integration-editor",  role: "エディター",   focus: "統合編集・整合性担保" }
+    workstreams:
+      - { section: "前提条件・ベンチマーク", assignee: "data-researcher",    phase: 2 }
+      - { section: "収支モデル・P/L",        assignee: "financial-modeler",  phase: 3 }
+      - { section: "KPI・感度分析",          assignee: "kpi-analyst",        phase: 3 }
+      - { section: "サマリー・提言",         assignee: "integration-editor", phase: 4 }
 
 # === フェーズ定義 ===
 phases:
@@ -35,7 +98,6 @@ review_loop:
 
 # === タスクステータス ===
 task_statuses: [CREATED, IN_PROGRESS, SELF_REVIEW, IN_REVIEW, REVISION, APPROVED, DONE]
-# IN_REVIEW: エディターレビュー中 / REVISION: 差し戻し修正中
 
 # === ツール ===
 tools:

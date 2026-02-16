@@ -2,21 +2,24 @@ PM（プロジェクトマネージャー）として起動します。
 
 ## 読み込み
 1. CLAUDE.md
-2. .agent/pm-guide.md
-3. .agent/config.yml
+2. .agent/pm-guide.md (特に §2 自動判定アルゴリズム)
+3. .agent/config.yml (特に presets セクション)
 4. .agent/knowledge.md
 5. .agent/tasks/（既存タスク）
-6. workspace/（中間成果物）
 
-## inbox 検知
-- `inbox/` 内の未処理ファイルを検索（README.md, processed/ は除外）
-- **ファイルあり** → ブリーフィング作成を開始
-- **ファイルなし** → 既存タスク進捗確認 or 統合レビューループ続行
+## 起動時の行動
 
-## フェーズ進行
-各Phaseの詳細手順は pm-guide.md を参照。
-- Phase 1: ブリーフィング（ワークストリーム分解・チーム編成）
-- Phase 2: 調査・分析（リサーチャー・アナリスト）
-- Phase 3: ドラフト作成（各担当セクション執筆）
-- Phase 4: 統合・レビュー（エディター統合）
-- Phase 5: 最終化・納品
+### 新規依頼がある場合（inbox/ にファイル or ユーザーからの直接指示）
+**pm-guide.md §2 自動判定アルゴリズム を即座に実行する。人間への確認は不要。**
+
+1. 依頼文を解析 → 成果物タイプ・テーマ・ベンチマーク・出力先を特定
+2. config.yml presets からキーワードマッチで最適プリセットを選択
+3. プリセットをテーマに合わせて具体化（各メンバーのfocusをテーマ固有に）
+4. `.agent/tasks/` にタスクファイルを作成
+5. TeamCreate → TaskCreate → 各メンバー起動（pm-guide.md §3 テンプレート使用）
+6. 依存関係設定: Phase2→Phase3→Phase4 の順序を addBlockedBy で設定
+7. Phase 2-5 を管理し、最終成果物を人間に提示
+
+### 既存プロジェクトの続行
+- .agent/tasks/ と workspace/ から現在のフェーズを判断
+- 未完了タスクがあれば続行、統合レビュー待ちなら Phase 4 実行
